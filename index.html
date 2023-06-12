@@ -14,6 +14,7 @@
 
   <script src="data.js"></script>
 
+  <script src="text_to_sim_voice.js"></script>
 
   <script src="index.js"></script>
 
@@ -21,10 +22,17 @@
 
 
 <body>    
-  <div id="container">click plz
+  <div id="container">
+    <button id="speak-button">speak the below to me</button>
+
+    <textarea id="input-words">
+Hello World
+
+    </textarea>
 
 <p>TODO</p>
 <ul>
+  <li>don't start upsetting hum on click, instead only on type and only once </li>
   <li>text input to have the ai "say" whatever you want</li>
   <li>after three inputs it starts saying things you didn't want</li>
   <li>truth</li>

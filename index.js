@@ -4,10 +4,21 @@ let real = [];
 let imag = [];
 
 window.onload = () => {
+
+  let button = document.querySelector('#speak-button');
+  let wordsInput =document.querySelector('#input-words');
+  const textVoiceSim = new TextToSimulatedVoice(1.0,1.0);
+
+  button.onclick = ()=>{
+    textVoiceSim.speak(wordsInput.value);
+
+  }
+
+
+  let clicked = false;
   window.onclick = ()=>{
-    base_loop();
-    //melody_loop();
-    speak("Hello World");
+   // !clicked && base_loop();
+   // clicked = true;
   }
   
   /*window.onmousedown = (e) => {

@@ -12,6 +12,25 @@ body {
 
 }
 
+button{
+  cursor: pointer;
+  display: block;
+  margin-bottom: 20px;
+}
+
+#container{
+  margin-left: auto;
+  margin-right: auto;
+  width: 90vw;
+}
+
+textarea{
+  width: 50vw;
+  height: 50vh;
+  display: block;
+  padding: 15px;
+}
+
 #splash{
   padding: 10vh;
   background-image: url("dirt.jpg");

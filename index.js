@@ -10,7 +10,7 @@ window.onload = () => {
   const textVoiceSim = new TextToSimulatedVoice(1.0,1.0);
 
   button.onclick = ()=>{
-    textVoiceSim.speak(wordsInput.value);
+    textVoiceSim.speak(wordsInput.value.split(" "));
 
   }
 

@@ -12,9 +12,23 @@ body {
 
 }
 
+#current-frequency{
+  text-align: center;
+}
+
+#controls{
+  display: flex;
+  gap: 20px;
+}
+
+.range-with-label{
+  display: flex;
+  width: 200px;
+  flex-direction: column;
+}
+
 button{
   cursor: pointer;
-  display: block;
   margin-bottom: 20px;
 }
 

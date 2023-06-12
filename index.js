@@ -7,11 +7,20 @@ window.onload = () => {
 
   let button = document.querySelector('#speak-button');
   let wordsInput =document.querySelector('#input-words');
+
+  let freqSlider = document.querySelector('#freq-input');
+  let freqLabel =document.querySelector('#current-frequency');
+  freqLabel.innerText = 'Current Frequency Multiplier: '+ freqSlider.value;
+
   const textVoiceSim = new TextToSimulatedVoice(1.0,1.0);
 
   button.onclick = ()=>{
     textVoiceSim.speak(wordsInput.value.split(" "));
+  }
 
+  freqSlider.oninput = ()=>{
+    freqLabel.innerText = 'Current Frequency Multiplier: '+ freqSlider.value;
+    textVoiceSim.freq_multiplier = freqSlider.value
   }
 
 

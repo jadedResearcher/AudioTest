@@ -21,15 +21,19 @@
 </head>
 
 
-<body>    
+<body>
   <div id="container">
-    <button id="speak-button">speak the below to me</button>
+    <div id ='controls'>
+      <button id="speak-button">speak the below to me</button>
+      <div class="range-with-label">
+        <input id="freq-input" type="range" step = '0.25' min="0.25" max="10.0" value="1.0"></input>
+        <div id="current-frequency">Current Frequency Multiplier: 1.0</div>
+      </div>
+    </div>
+
 
     <textarea id="input-words">
       Hello World, JR created me to talk to you.
-
-    
-
     </textarea>
 
 

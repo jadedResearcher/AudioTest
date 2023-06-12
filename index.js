@@ -17,8 +17,8 @@ window.onload = () => {
 
   let clicked = false;
   window.onclick = ()=>{
-   // !clicked && base_loop();
-   // clicked = true;
+    !clicked && base_loop();
+   clicked = true;
   }
   
   /*window.onmousedown = (e) => {

@@ -12,6 +12,10 @@ window.onload = () => {
   let freqLabel =document.querySelector('#current-frequency');
   freqLabel.innerText = 'Current Frequency Multiplier: '+ freqSlider.value;
 
+  let speedSlider = document.querySelector('#speed-input');
+  let speedLabel =document.querySelector('#current-speed');
+  speedLabel.innerText = 'Current Slowness Multiplier: '+ speedSlider.value;
+
   const textVoiceSim = new TextToSimulatedVoice(1.0,1.0);
 
   button.onclick = ()=>{
@@ -21,6 +25,11 @@ window.onload = () => {
   freqSlider.oninput = ()=>{
     freqLabel.innerText = 'Current Frequency Multiplier: '+ freqSlider.value;
     textVoiceSim.freq_multiplier = freqSlider.value
+  }
+
+  speedSlider.oninput = ()=>{
+    speedLabel.innerText = 'Current Slowness  Multiplier: '+ speedSlider.value;
+    textVoiceSim.speed_multiplier = speedSlider.value
   }
 
 

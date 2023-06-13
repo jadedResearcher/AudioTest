@@ -2,8 +2,8 @@
 //porting Truth from North and then twisting
 class TruthToLipSinc {
 
-    width = 200;
-    height = 200;
+    width = 250;
+    height = 250;
     squareWidth = 10;
     container;
     constructor(container){
@@ -25,6 +25,9 @@ class TruthToLipSinc {
         buffer.height = canvas.height;
         const size = 14;
         let ratio = 1.0;
+        //was 0.8
+        const ratio_modifier = (syllable.charCodeAt(0)%2)==0? 0.8:0.78;
+
         const outer_r = Math.min(canvas.height, canvas.width) / 2.1;
         const radius = outer_r;
         for (let i = 0; i < 11; i++) {
@@ -33,7 +36,7 @@ class TruthToLipSinc {
 
             canvas.getContext("2d").drawImage(buffer, 0, 0);
             canvas.getContext("2d").restore();
-            ratio = ratio * 0.8;
+            ratio = ratio * ratio_modifier;
         }
         //blur(canvas);
         ret.getContext("2d").drawImage(buffer, 0, 0,this.width, this.height);

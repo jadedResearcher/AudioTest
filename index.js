@@ -5,6 +5,13 @@ let imag = [];
 
 window.onload = () => {
 
+  let truthContainer = document.querySelector('#truth');
+  let truth = new TruthToLipSinc();
+  const initialCanvas = truth.renderFrame("oh.");
+  truthContainer.append(initialCanvas);
+  
+
+
   let button = document.querySelector('#speak-button');
   let wordsInput =document.querySelector('#input-words');
 

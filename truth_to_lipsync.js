@@ -5,6 +5,10 @@ class TruthToLipSinc {
     width = 200;
     height = 200;
     squareWidth = 10;
+    container;
+    constructor(container){
+        this.container = container;
+    }
 
     renderFrame = (syllable) => {
         const ret = document.createElement("canvas");
@@ -24,8 +28,9 @@ class TruthToLipSinc {
         const outer_r = Math.min(canvas.height, canvas.width) / 2.1;
         const radius = outer_r;
         for (let i = 0; i < 11; i++) {
-            this.drawCircleOfRects(buffer, radius * ratio, size * ratio, i, flipFunc);
+            this.drawCircleOfRects(buffer, radius * ratio, size * ratio, i, flipFunc,syllable);
             this.rotateRingTwelveDegrees(canvas, i);
+
             canvas.getContext("2d").drawImage(buffer, 0, 0);
             canvas.getContext("2d").restore();
             ratio = ratio * 0.8;
@@ -33,17 +38,21 @@ class TruthToLipSinc {
         //blur(canvas);
         ret.getContext("2d").drawImage(buffer, 0, 0,this.width, this.height);
 
-
+        if(this.container){
+            this.container.innerHTML="";
+            this.container.append(ret);
+            
+        }
         return ret;
     }
 
-    drawCircleOfRects(canvas, radius, size, ring_num, flipFunc) {
+    drawCircleOfRects(canvas, radius, size, ring_num, flipFunc,syllable) {
         const context = canvas.getContext("2d");
         const origin_x = canvas.width / 2;
         const origin_y = canvas.height / 2;
         //context.fillRect(origin_x, origin_y, 30, 30);
 
-        const num_rects = 90;
+        const num_rects = syllable.charCodeAt(0);
         //each circle should be upside down compared to the other to make it swirl
         if (ring_num % 2 === 0) {
             flipFunc(canvas);

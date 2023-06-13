@@ -9,12 +9,14 @@ function syllabify(words) {
 //a sort of language
 class TextToSimulatedVoice {
     audioCtx = new AudioContext();
+    truth
 
     freq_multiplier;
     speed_multiplier;
-    constructor(freq_multiplier, speed_multiplier) {
+    constructor(truth,freq_multiplier, speed_multiplier) {
         this.freq_multiplier = freq_multiplier;
         this.speed_multiplier = speed_multiplier;
+        this.truth = truth;
     }
 
     //words is array of words, with pauses in between
@@ -44,7 +46,9 @@ class TextToSimulatedVoice {
 
 
             await this.note(duration, frequency, real, imag);
-
+            if(this.truth){
+                this.truth.renderFrame(syllable);
+            }
             await sleep(rand.getRandomNumberBetween(10, 50)) //small pause between syllables
 
         }

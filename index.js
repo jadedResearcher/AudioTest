@@ -6,9 +6,8 @@ let imag = [];
 window.onload = () => {
 
   let truthContainer = document.querySelector('#truth');
-  let truth = new TruthToLipSinc();
-  const initialCanvas = truth.renderFrame("oh.");
-  truthContainer.append(initialCanvas);
+  let truth = new TruthToLipSinc(truthContainer);
+  truth.renderFrame("oh.");
   
 
 
@@ -23,7 +22,7 @@ window.onload = () => {
   let speedLabel =document.querySelector('#current-speed');
   speedLabel.innerText = 'Current Slowness Multiplier: '+ speedSlider.value;
 
-  const textVoiceSim = new TextToSimulatedVoice(1.0,1.0);
+  const textVoiceSim = new TextToSimulatedVoice(truth,1.0,1.0);
 
   button.onclick = ()=>{
     textVoiceSim.speak(wordsInput.value.split(" "));

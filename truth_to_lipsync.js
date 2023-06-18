@@ -6,11 +6,18 @@ class TruthToLipSinc {
     height = 250;
     squareWidth = 10;
     container;
+    truthImage;
+    falseImage;
     constructor(container){
         this.container = container;
+        this.truthImage = document.createElement("img");
+        this.falseImage = document.createElement("img");
+
+        this.truthImage.src = "eye1.png";
+        this.falseImage.src = "eye2.png";
     }
 
-    renderFrame = (syllable) => {
+    renderFrame = (syllable, truth) => {
         const ret = document.createElement("canvas");
         ret.width = this.width;
         ret.height = this.height;
@@ -39,6 +46,8 @@ class TruthToLipSinc {
             ratio = ratio * ratio_modifier;
         }
         //blur(canvas);
+        ret.getContext("2d").drawImage(truth?this.truthImage:this.falseImage, 98, 95);
+
         ret.getContext("2d").drawImage(buffer, 0, 0,this.width, this.height);
 
         if(this.container){

@@ -8,43 +8,52 @@ window.onload = () => {
   let truthContainer = document.querySelector('#truth');
   let truth = new TruthToLipSinc(truthContainer);
   truth.renderFrame("oh.");
-  
+
 
 
   let button = document.querySelector('#speak-button');
-  let wordsInput =document.querySelector('#input-words');
+  let wordsInput = document.querySelector('#input-words');
 
   let freqSlider = document.querySelector('#freq-input');
-  let freqLabel =document.querySelector('#current-frequency');
-  freqLabel.innerText = 'Current Frequency Multiplier: '+ freqSlider.value;
+  let freqLabel = document.querySelector('#current-frequency');
+  freqLabel.innerText = 'Current Frequency Multiplier: ' + freqSlider.value;
 
   let speedSlider = document.querySelector('#speed-input');
-  let speedLabel =document.querySelector('#current-speed');
-  speedLabel.innerText = 'Current Slowness Multiplier: '+ speedSlider.value;
+  let speedLabel = document.querySelector('#current-speed');
+  speedLabel.innerText = 'Current Slowness Multiplier: ' + speedSlider.value;
 
-  const textVoiceSim = new TextToSimulatedVoice(truth,1.0,1.0);
+  const textVoiceSim = new TextToSimulatedVoice(truth, 1.0, 1.0);
 
-  button.onclick = ()=>{
-    textVoiceSim.speak(wordsInput.value.split(" "));
+  button.onclick = () => {
+
+    const inner = async () => {
+      await textVoiceSim.speak(wordsInput.value.split(" "), null, true);
+      await textVoiceSim.speak(["fuck","you"], null, false);
+      await textVoiceSim.speak(["_"], null, true);
+
+    }
+
+    inner();
+
   }
 
-  freqSlider.oninput = ()=>{
-    freqLabel.innerText = 'Current Frequency Multiplier: '+ freqSlider.value;
+  freqSlider.oninput = () => {
+    freqLabel.innerText = 'Current Frequency Multiplier: ' + freqSlider.value;
     textVoiceSim.freq_multiplier = freqSlider.value
   }
 
-  speedSlider.oninput = ()=>{
-    speedLabel.innerText = 'Current Slowness  Multiplier: '+ speedSlider.value;
+  speedSlider.oninput = () => {
+    speedLabel.innerText = 'Current Slowness  Multiplier: ' + speedSlider.value;
     textVoiceSim.speed_multiplier = speedSlider.value
   }
 
 
   let clicked = false;
-  window.onclick = ()=>{
+  window.onclick = () => {
     !clicked && base_loop();
-   clicked = true;
+    clicked = true;
   }
-  
+
   /*window.onmousedown = (e) => {
     dragging = true;
   };
@@ -63,64 +72,64 @@ window.onload = () => {
 }
 
 //seeded random internal so it should sound the same way every time
-const speak = async (words,rand)=>{
-  console.log("JR NOTE: trying to speak",words)
-  if(!rand){
-     rand = new SeededRandom(13);
+const speak = async (words, rand) => {
+  console.log("JR NOTE: trying to speak", words)
+  if (!rand) {
+    rand = new SeededRandom(13);
 
   }
-  console.log("JR NOTE: rand is",rand)
-  if(!words.trim()){
+  console.log("JR NOTE: rand is", rand)
+  if (!words.trim()) {
     return;
   }
-  const duration = rand.getRandomNumberBetween(50,100);
+  const duration = rand.getRandomNumberBetween(50, 100);
   const frequency = words.charCodeAt(0);
   let real = [];
   let imag = [];
-  for(let i = 0; i<words.length; i++){
+  for (let i = 0; i < words.length; i++) {
     real.push(words.charCodeAt(i))
     imag.push(words.charCodeAt(i))
     real.push(216)
     imag.push(216)
   }
-  console.log("JR NOTE: trying to speak",{duration,frequency,real,imag})
+  console.log("JR NOTE: trying to speak", { duration, frequency, real, imag })
 
   await note(duration, frequency, real, imag);
-  speak(words.substring(1),rand);
+  speak(words.substring(1), rand);
 }
 
 //higher frequency, short duration
-const melody_loop = async ()=>{
-  const duration = getRandomNumberBetween(10,3000);
-  const frequency = getRandomNumberBetween(50,200);
+const melody_loop = async () => {
+  const duration = getRandomNumberBetween(10, 3000);
+  const frequency = getRandomNumberBetween(50, 200);
   let real = [];
   let imag = [];
-  let length = getRandomNumberBetween(2,100);
-  for(let i = 0; i<length; i++){
-    real.push(getRandomNumberBetween(0,10))
-    imag.push(getRandomNumberBetween(0,10))
+  let length = getRandomNumberBetween(2, 100);
+  for (let i = 0; i < length; i++) {
+    real.push(getRandomNumberBetween(0, 10))
+    imag.push(getRandomNumberBetween(0, 10))
   }
   await note(duration, frequency, real, imag);
   melody_loop();
 }
 
 //low frequency, long duration
-const base_loop = async ()=>{
-  const duration = getRandomNumberBetween(10000,60000);
-  const frequency = getRandomNumberBetween(0,10);
+const base_loop = async () => {
+  const duration = getRandomNumberBetween(10000, 60000);
+  const frequency = getRandomNumberBetween(0, 10);
   let real = [];
   let imag = [];
-  let length = getRandomNumberBetween(2,100);
-  for(let i = 0; i<length; i++){
-    real.push(getRandomNumberBetween(0,10))
-    imag.push(getRandomNumberBetween(0,10))
+  let length = getRandomNumberBetween(2, 100);
+  for (let i = 0; i < length; i++) {
+    real.push(getRandomNumberBetween(0, 10))
+    imag.push(getRandomNumberBetween(0, 10))
   }
   await note(duration, frequency, real, imag);
   base_loop();
 }
 
 
-const note = async(duration, frequency, real, imag)=>{
+const note = async (duration, frequency, real, imag) => {
   const audioCtx = new AudioContext();
   const osc = audioCtx.createOscillator();
 

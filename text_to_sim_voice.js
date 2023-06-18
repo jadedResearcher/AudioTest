@@ -13,15 +13,16 @@ class TextToSimulatedVoice {
 
     freq_multiplier;
     speed_multiplier;
-    constructor(truth,freq_multiplier, speed_multiplier) {
+    constructor(truth, freq_multiplier, speed_multiplier) {
         this.freq_multiplier = freq_multiplier;
         this.speed_multiplier = speed_multiplier;
         this.truth = truth;
     }
 
     //words is array of words, with pauses in between
-    speak = async (words, rand) => {
-        if(words.length === 0){
+    speak = async (words, rand, truthQuotient) => {
+        console.log("JR NOTE: speaking are", { words, rand, truthQuotient })
+        if (words.length === 0) {
             return;
         }
         const word = words[0];
@@ -29,7 +30,7 @@ class TextToSimulatedVoice {
             rand = new SeededRandom(13);
         }
         let word_parts = syllabify(word); //can return null for things like JR
-        word_parts = word_parts? word_parts: word;
+        word_parts = word_parts ? word_parts : word;
 
         //forEach allows async within
         for (let syllable of word_parts) {
@@ -46,18 +47,24 @@ class TextToSimulatedVoice {
 
 
             await this.note(duration, frequency, real, imag);
-            if(this.truth){
-                this.truth.renderFrame(syllable);
+            if (this.truth) {
+                this.truth.renderFrame(syllable, truthQuotient);
             }
             await sleep(rand.getRandomNumberBetween(10, 50)) //small pause between syllables
 
         }
         await sleep(rand.getRandomNumberBetween(20, 150)) //pause bewteen words
-        this.speak(words.slice(1), rand);
+        await this.speak(words.slice(1), rand, truthQuotient);
+
     }
 
     note = async (duration, frequency, real, imag) => {
         const osc = this.audioCtx.createOscillator();
+        const gainNode = this.audioCtx.createGain();
+
+        osc.connect(gainNode);
+        gainNode.connect(this.audioCtx.destination)
+
 
         const wave = this.audioCtx.createPeriodicWave(real, imag);
 
@@ -66,10 +73,11 @@ class TextToSimulatedVoice {
         osc.connect(this.audioCtx.destination);
         osc.start();
         await sleep(duration)
-        osc.stop();
+        gainNode.gain.setValueAtTime(gainNode.gain.value, this.audioCtx.currentTime);
+
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 0.03);
+        await sleep(3)
+        osc.stop(); //stopping abruptly causes a clicking sound
     }
-
-
-
 
 }

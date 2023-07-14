@@ -4,7 +4,8 @@
 }
 
 body {
-  color: black;
+  color: red;
+  background: black;
   margin: 0px;
   margin: 0px;
   overflow: auto;
@@ -12,40 +13,63 @@ body {
 
 }
 
-#current-frequency{
+#theater {
+  position: relative;
+  padding: 50p;
+  width: 600px;
+  height: 500px;
+}
+
+#ytplayer {
+  position: absolute;
+  top: 181px;
+  left: 353px;
+  width: 248px;
+  height: 150px;
+  transform: rotateY(-41deg) skewY(13deg);
+}
+
+#theater-image {
+  width: 600px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#current-frequency {
   text-align: center;
 }
 
-#controls{
+#controls {
   display: flex;
   gap: 20px;
 }
 
-.range-with-label{
+.range-with-label {
   display: flex;
   width: 200px;
   flex-direction: column;
 }
 
-button{
+button {
   cursor: pointer;
   margin-bottom: 20px;
 }
 
-#container{
+#container {
   margin-left: auto;
   margin-right: auto;
   width: 90vw;
 }
 
-textarea{
+textarea {
   width: 50vw;
   height: 25vh;
   display: block;
   padding: 15px;
 }
 
-#splash{
+#splash {
   padding: 10vh;
   background-image: url("dirt.jpg");
   border: 5px solid #c4c4c4;
@@ -56,7 +80,7 @@ textarea{
   left: 30vw;
   text-align: center;
   border-radius: 5px;
-  box-shadow: black 0px 0px 75px ;
+  box-shadow: black 0px 0px 75px;
   text-shadow: black 0px 0px 8px;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-size: 72px;
@@ -64,7 +88,7 @@ textarea{
   letter-spacing: 10px;
 }
 
-#splash div{
+#splash div {
   font-size: 20px;
   width: 100%;
   text-shadow: black 0px 0px 8px;
@@ -86,7 +110,7 @@ textarea{
   background-image: url("dirt.jpg");
 }
 
-#hole{
+#hole {
   max-width: 85vw;
   max-height: 85vh;
   width: 4vw;
@@ -98,7 +122,7 @@ textarea{
   left: 50vw;
 }
 
-.bad-impulse{
+.bad-impulse {
   color: red;
   border: 1px dotted red;
   padding: 10px;
@@ -109,10 +133,10 @@ textarea{
 }
 
 .rainbowTextAnimated {
-  background-image: 
-    linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet); 
+  background-image:
+    linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;  
+  -webkit-text-fill-color: transparent;
   animation: move 360s linear infinite;
 }
 
@@ -123,9 +147,12 @@ textarea{
 }
 
 @keyframes shake {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
+
   50% {
     transform: translateX(-1px);
   }
@@ -157,8 +184,6 @@ textarea{
   max-width: 200px;
   z-index: 4;
   animation: shake 0.8s linear infinite
-
-
 }
 
 .fruit-container {
@@ -175,7 +200,7 @@ textarea{
   background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(255, 154, 0, 1) 10%, rgba(208, 222, 33, 1) 20%, rgba(79, 220, 74, 1) 30%, rgba(63, 218, 216, 1) 40%, rgba(47, 201, 226, 1) 50%, rgba(28, 127, 238, 1) 60%, rgba(95, 21, 242, 1) 70%, rgba(186, 12, 248, 1) 80%, rgba(251, 7, 217, 1) 90%, rgba(255, 0, 0, 1) 100%);
 }
 
-.avatar{
+.avatar {
   position: relative;
   z-index: 2;
 }
@@ -248,8 +273,8 @@ textarea{
   position: fixed;
   top: 0px;
   left: 0px;
-  z-index:1000;
-  pointer-events:none;
+  z-index: 1000;
+  pointer-events: none;
 }
 
 
@@ -398,7 +423,7 @@ button {
 .customer-service-hell {
   overflow: auto;
   height: 424px;
-  
+
 }
 
 
@@ -413,14 +438,14 @@ button {
 .customer-service-hell::-webkit-scrollbar-track {
   background: white;
 }
- 
+
 /* Handle */
 .customer-service-hell::-webkit-scrollbar-thumb {
-  background:  #b72a21;
-  ; 
+  background: #b72a21;
+  ;
 }
 
 /* Handle on hover */
 .customer-service-hell::-webkit-scrollbar-thumb:hover {
-  background: #e4e4e4; 
+  background: #e4e4e4;
 }

@@ -46,6 +46,19 @@ const pickFrom = (array) => {
   return array[getRandomNumberBetween(0, array.length - 1)];
 }
 
+const chunkUpArray = (array, chunkSize) => {
+  if (chunkSize < 1) {
+    return array;
+  }
+  const ret = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    ret.push(array.slice(i, i + chunkSize));
+    // do whatever
+  }
+  return ret;
+}
+
+
 const createElementWithClassAndParent = (eleName, parent, className) => {
   const ele = createElementWithClass(eleName, className);
   parent.append(ele);

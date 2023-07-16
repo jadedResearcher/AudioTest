@@ -11,7 +11,7 @@ class SeededRandom {
   }
 
   //default is zero and one, type is inferred to be a number from this
-  nextDouble = (min = 0, max=1) => {
+  nextDouble = (min = 0, max = 1) => {
     this.internal_seed = (this.internal_seed * 1664525 + 1013904223) % 4294967296;
     const rnd = this.internal_seed / 4294967296;
     return min + rnd * (max - min);
@@ -23,6 +23,17 @@ class SeededRandom {
 
   pickFrom = (array) => {
     return array[this.getRandomNumberBetween(0, array.length - 1)];
+  }
+  //if you have say, a string "hello world my name is"
+  //and you have a chunk size of 3, you'd get something like
+  //"worhel na islo " etc
+  shuffleInChunks = (array, chunkSize) => {
+    console.log("JR NOTE: shuffleInChunks",chunkSize)
+
+    const chunks = chunkUpArray(array, chunkSize);
+    this.shuffle(chunks);
+    console.log("JR NOTE: shuffleInChunks going to return")
+    return chunks.flat();
   }
 
   shuffle = (array) => {

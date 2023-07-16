@@ -1,6 +1,7 @@
 window.onload = ()=>{
   const audioFucker = new AudioFucker();
   const url = "http://farragnarok.com/PodCasts/oinapmaz.mp3";
+  //const url = 'http://farragnarok.com/PodCasts/fuck2.mp3'
   const container = document.querySelector("#audio-test");
   const regularPlay = createElementWithClassAndParent("button",container);
   regularPlay.innerText = "Play Audio Normal";
@@ -21,6 +22,20 @@ window.onload = ()=>{
   scromble.onclick = ()=>{
     console.log("JR NOTE: click")
     audioFucker.playURLScromble(url);
+  }
+
+  const scrombleInChunks = createElementWithClassAndParent("button",container);
+  scrombleInChunks.innerText = "Play Audio Chunk Scrombled (does not work) rip";
+  scrombleInChunks.onclick = ()=>{
+    console.log("JR NOTE: click")
+    audioFucker.playURLScrombleInChunks(url,10);
+  }
+
+  const muffle = createElementWithClassAndParent("button",container);
+  muffle.innerText = "Play Audio Muffled";
+  muffle.onclick = ()=>{
+    console.log("JR NOTE: click")
+    audioFucker.playURLMuffled(url);
   }
 
 

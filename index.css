@@ -26,6 +26,7 @@ body {
   left: 353px;
   width: 248px;
   height: 150px;
+  mix-blend-mode: screen;
   transform: rotateY(-41deg) skewY(13deg);
 }
 

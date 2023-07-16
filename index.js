@@ -11,6 +11,9 @@ var tag = document.createElement('script');
       videoId: 'nd5jpVLJGWg',
       playerVars: { 'autoplay': 1, 'controls': 0 }
     });
+    player.loadPlaylist({playlist:"PLjd-UedDYHsGSFsNHkJ00s0_EOeJ7U8hf",
+      index:11,
+      startSeconds:0})
   }
 
   let body;

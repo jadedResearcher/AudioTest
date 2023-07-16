@@ -22,7 +22,27 @@ class AudioFucker {
       });
   }
 
-  playURLMuffled = (url) => {
+  muffleFilter = ()=>{
+    const filter = this.audioCtx.createBiquadFilter();
+    // Note: the Web Audio spec is moving from constants to strings.
+    // filter.type = 'lowpass';
+    filter.type = filter.LOWPASS;
+    filter.frequency.value = 100;
+    return filter;
+  }
+
+  //returns the filter so you can edit it at your leisure
+  playURLWithFilter = (url,filter) => {
+    window.fetch(url)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
+      .then(audioBuffer => {
+        this.play(audioBuffer, filter)
+
+      });
+  }
+
+  playURLTelephone = (url) => {
     window.fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
@@ -32,6 +52,28 @@ class AudioFucker {
         // filter.type = 'lowpass';
         filter.type = filter.LOWPASS;
         filter.frequency.value = 100;
+
+        this.play(audioBuffer, filter)
+
+        return filter;
+      });
+  }
+
+  playURLExperiment = (url) => {
+    window.fetch(url)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
+      .then(audioBuffer => {
+        const filter = this.audioCtx.createBiquadFilter();
+        // Note: the Web Audio spec is moving from constants to strings.
+        // filter.type = 'lowpass';
+        filter.type = filter.HIGHPASS;
+        filter.frequency.value = 100;
+        setInterval(() => {
+          console.log("JR NOTE: filter.frequency.value  ", filter.frequency.value)
+          filter.frequency.value += 100;
+
+        }, 6000)
         this.play(audioBuffer, filter)
       });
   }
@@ -91,7 +133,7 @@ class AudioFucker {
       //filter is in between source and destination
       source.connect(optionalFilter);
       optionalFilter.connect(this.audioCtx.destination);
-    }else{
+    } else {
       //direct connection
       source.connect(this.audioCtx.destination);
 

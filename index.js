@@ -9,7 +9,7 @@ var tag = document.createElement('script');
       height: '360',
       width: '640',
       videoId: 'nd5jpVLJGWg',
-      playerVars: { 'autoplay': 1, 'controls': 0 }
+      //playerVars: { 'autoplay': 1, 'controls': 0 }
     });
     player.loadPlaylist({playlist:"PLjd-UedDYHsGSFsNHkJ00s0_EOeJ7U8hf",
       index:11,

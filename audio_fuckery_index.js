@@ -1,41 +1,48 @@
-window.onload = ()=>{
+window.onload = () => {
   const audioFucker = new AudioFucker();
   const url = "http://farragnarok.com/PodCasts/oinapmaz.mp3";
   //const url = 'http://farragnarok.com/PodCasts/fuck2.mp3'
   const container = document.querySelector("#audio-test");
-  const regularPlay = createElementWithClassAndParent("button",container);
+  const regularPlay = createElementWithClassAndParent("button", container);
   regularPlay.innerText = "Play Audio Normal";
-  regularPlay.onclick = ()=>{
+  regularPlay.onclick = () => {
     console.log("JR NOTE: click")
     audioFucker.playURL(url);
   }
 
-  const reverse = createElementWithClassAndParent("button",container);
+  const reverse = createElementWithClassAndParent("button", container);
   reverse.innerText = "Play Audio Reverse";
-  reverse.onclick = ()=>{
+  reverse.onclick = () => {
     console.log("JR NOTE: click")
     audioFucker.playURLReverse(url);
   }
 
-  const scromble = createElementWithClassAndParent("button",container);
+  const scromble = createElementWithClassAndParent("button", container);
   scromble.innerText = "Play Audio Scrombled";
-  scromble.onclick = ()=>{
+  scromble.onclick = () => {
     console.log("JR NOTE: click")
     audioFucker.playURLScromble(url);
   }
 
-  const scrombleInChunks = createElementWithClassAndParent("button",container);
+  const scrombleInChunks = createElementWithClassAndParent("button", container);
   scrombleInChunks.innerText = "Play Audio Chunk Scrombled (does not work) rip";
-  scrombleInChunks.onclick = ()=>{
+  scrombleInChunks.onclick = () => {
     console.log("JR NOTE: click")
-    audioFucker.playURLScrombleInChunks(url,10);
+    audioFucker.playURLScrombleInChunks(url, 10);
   }
 
-  const muffle = createElementWithClassAndParent("button",container);
+  const muffle = createElementWithClassAndParent("button", container);
   muffle.innerText = "Play Audio Muffled";
-  muffle.onclick = ()=>{
+  muffle.onclick = async () => {
     console.log("JR NOTE: click")
-    audioFucker.playURLMuffled(url);
+    const filter = audioFucker.muffleFilter();
+    await audioFucker.playURLWithFilter(url,filter);
+    //JR NOTE: the below works, so we can fuck with how muffled it is
+    setInterval(() => {
+      console.log("JR NOTE: filter.frequency.value  ", filter.frequency.value)
+      filter.frequency.value += 100;
+
+    }, 6000)
   }
 
 

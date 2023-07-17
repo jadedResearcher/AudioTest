@@ -36,7 +36,7 @@ window.onload = () => {
   muffle.onclick = async () => {
     console.log("JR NOTE: click")
     const filter = audioFucker.muffleFilter();
-    await audioFucker.playURLWithOptionalStep(url,[filter]);
+    await audioFucker.playURLWithOptionalStep(url, [filter]);
     //JR NOTE: the below works, so we can fuck with how muffled it is
     setInterval(() => {
       console.log("JR NOTE: filter.frequency.value  ", filter.frequency.value)
@@ -52,11 +52,11 @@ window.onload = () => {
     let amount = 400;
     let d = audioFucker.distortion(amount);
 
-    await audioFucker.playURLWithOptionalStep(url,[d]);
+    await audioFucker.playURLWithOptionalStep(url, [d]);
     //JR NOTE: the below works, so we can fuck with how muffled it is
     setInterval(() => {
       console.log("JR NOTE: distortion: ", amount)
-      d.curve = audioFucker.makeDistortionCurve(amount+=1000)
+      d.curve = audioFucker.makeDistortionCurve(amount += 1000)
     }, 1000)
   }
 
@@ -68,12 +68,21 @@ window.onload = () => {
     let d = audioFucker.distortion(amount);
     const filter = audioFucker.muffleFilter();
 
-    await audioFucker.playURLWithOptionalStep(url,[d,filter]);
+    await audioFucker.playURLWithOptionalStep(url, [d, filter]);
     //JR NOTE: the below works, so we can fuck with how muffled it is
     setInterval(() => {
       console.log("JR NOTE: distortion: ", amount)
-      d.curve = audioFucker.makeDistortionCurve(amount+=1000)
+      d.curve = audioFucker.makeDistortionCurve(amount += 1000)
     }, 1000)
+  }
+
+
+  const convolverTest = createElementWithClassAndParent("button", container);
+  convolverTest.innerText = "Play Audio With Reverb";
+  convolverTest.onclick = async () => {
+    console.log("JR NOTE: click")
+    const c = await audioFucker.convolverFromURL("http://farragofiction.com/AudioTest/audio/spring.wav");
+    await audioFucker.playURLWithOptionalStep(url, [c]);
   }
 
 

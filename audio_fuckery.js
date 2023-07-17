@@ -35,6 +35,21 @@ class AudioFucker {
     return curve;
   }
 
+  convolverFromURL = (url)=>{
+    const convolver = this.audioCtx.createConvolver();
+    window.fetch(url)
+    .then(response => response.arrayBuffer())
+    .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
+    .then(audioBuffer => {
+      //im following https://mdn.github.io/webaudio-examples/voice-change-o-matic/ what is this for???
+      const soundSource = this.audioCtx.createBufferSource();
+      convolver.buffer = audioBuffer;
+    });
+
+    return convolver;
+    
+  }
+
   distortion = (amount) => {
     const distortion = this.audioCtx.createWaveShaper();
     distortion.oversample = "4x"

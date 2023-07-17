@@ -9,16 +9,22 @@ for procedural fuckery
 
 class AudioFucker {
   audioCtx = new AudioContext();
+  //it is almost midnight and im only 30% sure im using these terms correctly
+  //controls the volume of the original source
+  dryGainNode;
+  //controls the volume of the modified source
+  wetGainNode;
+  sourceNode;
   //fast, slow, i seem to recall negative doesn't work
   //https://stackoverflow.com/questions/9874167/how-can-i-play-audio-in-reverse-with-web-audio-api
   playBackRate = 1.0;
 
-  playURL = (url) => {
+  playURL = (url, playBackRate) => {
     window.fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {
-        this.play(audioBuffer)
+        this.play(audioBuffer, playBackRate)
       });
   }
   makeDistortionCurve = (amount) => {
@@ -35,19 +41,19 @@ class AudioFucker {
     return curve;
   }
 
-  convolverFromURL = (url)=>{
+  convolverFromURL = (url) => {
     const convolver = this.audioCtx.createConvolver();
     window.fetch(url)
-    .then(response => response.arrayBuffer())
-    .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
-    .then(audioBuffer => {
-      //im following https://mdn.github.io/webaudio-examples/voice-change-o-matic/ what is this for???
-      const soundSource = this.audioCtx.createBufferSource();
-      convolver.buffer = audioBuffer;
-    });
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
+      .then(audioBuffer => {
+        //im following https://mdn.github.io/webaudio-examples/voice-change-o-matic/ what is this for???
+        const soundSource = this.audioCtx.createBufferSource();
+        convolver.buffer = audioBuffer;
+      });
 
     return convolver;
-    
+
   }
 
   distortion = (amount) => {
@@ -68,66 +74,31 @@ class AudioFucker {
 
   //pass in a filter or a convolution, something to be played between source and destination
   //filers can be changed over time, but convolutions are all or nothing.
-  playURLWithOptionalStep = (url, optionalStep) => {
+  playURLWithOptionalStep = (url, playBackRate, optionalStep) => {
     window.fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {
-        this.play(audioBuffer, optionalStep)
+        this.play(audioBuffer, playBackRate, optionalStep)
 
-      });
-  }
-
-  playURLExperiment = (url) => {
-    window.fetch(url)
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
-      .then(audioBuffer => {
-        const filter = this.audioCtx.createBiquadFilter();
-        // Note: the Web Audio spec is moving from constants to strings.
-        // filter.type = 'lowpass';
-        filter.type = filter.HIGHPASS;
-        filter.frequency.value = 100;
-        setInterval(() => {
-          console.log("JR NOTE: filter.frequency.value  ", filter.frequency.value)
-          filter.frequency.value += 100;
-
-        }, 6000)
-        this.play(audioBuffer, filter)
       });
   }
 
 
   //https://stackoverflow.com/questions/9874167/how-can-i-play-audio-in-reverse-with-web-audio-api
-  playURLReverse = (url) => {
+  playURLReverse = (url, playBackRate) => {
     window.fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {
         Array.prototype.reverse.call(audioBuffer.getChannelData(0));
         // Array.prototype.reverse.call(audioBuffer.getChannelData(1));
-        this.play(audioBuffer)
+        this.play(audioBuffer, playBackRate)
       });
   }
 
-  playURLScrombleInChunks = (url, numberChunks) => {
-    console.log("JR NOTE: playURLScrombleInChunks", numberChunks)
-    window.fetch(url)
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
-      .then(audioBuffer => {
-        //this sure won't have weird consequences!
-        audioBuffer.getChannelData(0).sort();
-        console.log("JR NOTE: audio buffer size before chunk scromble", audioBuffer.length, audioBuffer.getChannelData(0).slice(0, 100))
-        let tmp = new SeededRandom(13).shuffleInChunks(audioBuffer.getChannelData(0), Math.floor(audioBuffer.length / numberChunks));
-        tmp = new Float32Array(tmp.map(a => [...a]).flat()) //array32 is resistent to flat
-        console.log("JR NOTE: audio buffer size after chunk scromble", tmp.length, tmp.slice(0, 100))
-        audioBuffer.copyToChannel(tmp, 0);
-        this.play(audioBuffer)
-      });
-  }
 
-  playURLScromble = (url) => {
+  playURLScromble = (url, playBackRate) => {
     window.fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
@@ -136,42 +107,84 @@ class AudioFucker {
         console.log("JR NOTE: audio buffer size before scromble", audioBuffer.length, audioBuffer.getChannelData(0).slice(0, 100))
 
         const tmp = new SeededRandom(13).shuffle(audioBuffer.getChannelData(0));
-        this.play(audioBuffer)
+        this.play(audioBuffer, playBackRate)
         console.log("JR NOTE: audio buffer size after scromble", audioBuffer.length, audioBuffer.getChannelData(0).slice(0, 100))
 
       });
   }
 
 
+  setBalanceBetweenDryAndWet = (dry, wet) => {
+    console.log("JR NOTE: wet the drys",wet,dry)
+    if (this.dryGainNode) {
+      this.dryGainNode.gain.value = dry;
+    }
 
-  play(audioBuffer, optionalSteps) {
+    if (this.wetGainNode) {
+      this.wetGainNode.gain.value = wet;
+    }
+  }
+
+  setPlayBackRate = (rate) => {
+    console.log("JR NOTE: trying to set playback rate for", this.sourceNode)
+    if (this.sourceNode) {
+      this.sourceNode.playbackRate.value = rate;
+    }
+  }
+
+
+
+  //returns an array of gain nodes you can control
+  play(audioBuffer, playbackRate = 1, optionalSteps) {
     const source = this.audioCtx.createBufferSource();
+    if (playbackRate) {
+      source.playbackRate.value = playbackRate;
+    }
+
+    this.sourceNode = source;
+    this.gainNodes = [];
     source.loop = true;
     source.buffer = audioBuffer;
+
+    this.wetGainNode = this.audioCtx.createGain();
+    source.connect(this.wetGainNode);
+
+    this.dryGainNode = this.audioCtx.createGain();
+    source.connect(this.dryGainNode);
+
+
+
     if (optionalSteps) {
       //filter is in between source and destination
-      const order = [...optionalSteps, this.audioCtx.destination];
-      console.log('JR NOTE: order is', order)
 
       let lastStep = source;
-      for (let step of order) {
-        console.log("JR NOTE: connectiong",lastStep, "to",step)
+      for (let step of optionalSteps) {
+        console.log("JR NOTE: connectiong", lastStep, "to", step)
         /*
           source.connect(optionalStep);
           optionalStep.connect(this.audioCtx.destination);
         */
-          lastStep.connect(step);
-          lastStep = step;
-          //step.connect(this.audioCtx.destination);
-      }
+        lastStep.connect(step);
 
-    } else {
-      //direct connection
-      source.connect(this.audioCtx.destination);
+        lastStep = step;
+
+        //step.connect(this.audioCtx.destination);
+      }
+      lastStep.connect(this.wetGainNode);
+
+      this.wetGainNode.connect(this.audioCtx.destination);
+
 
     }
+
+
+    this.dryGainNode.connect(this.audioCtx.destination);
+
+
+    this.gainNodes.push()
     console.log("JR NOTE: going to start")
     source.start();
+
   }
 
 }

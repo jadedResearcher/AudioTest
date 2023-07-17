@@ -114,14 +114,15 @@ class AudioFucker {
   }
 
 
-  setBalanceBetweenDryAndWet = (dry, wet) => {
-    console.log("JR NOTE: wet the drys",wet,dry)
+  setBalanceBetweenDryAndWet = (dryValue) => {
+    console.log("JR NOTE: wet the drys",dryValue)
+    dryValue = Math.max(0, dryValue)
     if (this.dryGainNode) {
-      this.dryGainNode.gain.value = dry;
+      this.dryGainNode.gain.value = dryValue;
     }
 
     if (this.wetGainNode) {
-      this.wetGainNode.gain.value = wet;
+      this.wetGainNode.gain.value = 1 -dryValue;
     }
   }
 
@@ -147,7 +148,6 @@ class AudioFucker {
     source.buffer = audioBuffer;
 
     this.wetGainNode = this.audioCtx.createGain();
-    source.connect(this.wetGainNode);
 
     this.dryGainNode = this.audioCtx.createGain();
     source.connect(this.dryGainNode);
@@ -160,15 +160,10 @@ class AudioFucker {
       let lastStep = source;
       for (let step of optionalSteps) {
         console.log("JR NOTE: connectiong", lastStep, "to", step)
-        /*
-          source.connect(optionalStep);
-          optionalStep.connect(this.audioCtx.destination);
-        */
         lastStep.connect(step);
 
         lastStep = step;
 
-        //step.connect(this.audioCtx.destination);
       }
       lastStep.connect(this.wetGainNode);
 
@@ -181,7 +176,6 @@ class AudioFucker {
     this.dryGainNode.connect(this.audioCtx.destination);
 
 
-    this.gainNodes.push()
     console.log("JR NOTE: going to start")
     source.start();
 

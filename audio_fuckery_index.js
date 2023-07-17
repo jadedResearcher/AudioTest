@@ -142,11 +142,17 @@ window.onload = () => {
   }
 
   const weirdShit = createElementWithClassAndParent("button", container);
-  weirdShit.innerText = "Turn Audio Into Eldritch Singing";
+  weirdShit.innerText = "Turn Audio Into Eldritch Singing Over Time";
   weirdShit.onclick = async () => {
     console.log("JR NOTE: click")
     const c = await audioFucker.convolverFromURL("http://farragofiction.com/AudioTest/audio/Gushed%20Out%20Great%20Globs.wav");
     await audioFucker.playURLWithOptionalStep(url,1, [c]);
+    let sourceGain = 1.0;
+    audioFucker.setBalanceBetweenDryAndWet(sourceGain)
+
+    setInterval(() => {
+      audioFucker.setBalanceBetweenDryAndWet(sourceGain+=-0.1)
+    }, 3000)
   }
 
   const weirdShit2 = createElementWithClassAndParent("button", container);
@@ -157,11 +163,10 @@ window.onload = () => {
     await audioFucker.playURLWithOptionalStep(url,1, [c]);
 
     let sourceGain = 1.0;
-    let effectGAin = 0.1;
     audioFucker.setBalanceBetweenDryAndWet(sourceGain, effectGAin)
 
     setInterval(() => {
-      audioFucker.setBalanceBetweenDryAndWet(sourceGain+=-0.1,effectGAin+=0.1)
+      audioFucker.setBalanceBetweenDryAndWet(sourceGain+=-0.1)
     }, 3000)
   }
 

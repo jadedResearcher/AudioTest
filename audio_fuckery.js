@@ -129,19 +129,33 @@ class AudioFucker {
 
 
 
-  play(audioBuffer, optionalStep) {
+  play(audioBuffer, optionalSteps) {
     const source = this.audioCtx.createBufferSource();
     source.loop = true;
     source.buffer = audioBuffer;
-    if (optionalStep) {
+    if (optionalSteps) {
       //filter is in between source and destination
-      source.connect(optionalStep);
-      optionalStep.connect(this.audioCtx.destination);
+      const order = [...optionalSteps, this.audioCtx.destination];
+      console.log('JR NOTE: order is', order)
+
+      let lastStep = source;
+      for (let step of order) {
+        console.log("JR NOTE: connectiong",lastStep, "to",step)
+        /*
+          source.connect(optionalStep);
+          optionalStep.connect(this.audioCtx.destination);
+        */
+          lastStep.connect(step);
+          lastStep = step;
+          //step.connect(this.audioCtx.destination);
+      }
+
     } else {
       //direct connection
       source.connect(this.audioCtx.destination);
 
     }
+    console.log("JR NOTE: going to start")
     source.start();
   }
 

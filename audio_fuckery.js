@@ -21,8 +21,28 @@ class AudioFucker {
         this.play(audioBuffer)
       });
   }
+  makeDistortionCurve = (amount) => {
+    let k = typeof amount === "number" ? amount : 50,
+      n_samples = 44100,
+      curve = new Float32Array(n_samples),
+      deg = Math.PI / 180,
+      i = 0,
+      x;
+    for (; i < n_samples; ++i) {
+      x = (i * 2) / n_samples - 1;
+      curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+    }
+    return curve;
+  }
 
-  muffleFilter = ()=>{
+  distortion = (amount) => {
+    const distortion = this.audioCtx.createWaveShaper();
+    distortion.oversample = "4x"
+    distortion.curve = this.makeDistortionCurve(amount);
+    return distortion;
+  }
+
+  muffleFilter = () => {
     const filter = this.audioCtx.createBiquadFilter();
     // Note: the Web Audio spec is moving from constants to strings.
     // filter.type = 'lowpass';
@@ -31,31 +51,15 @@ class AudioFucker {
     return filter;
   }
 
-  //returns the filter so you can edit it at your leisure
-  playURLWithFilter = (url,filter) => {
+  //pass in a filter or a convolution, something to be played between source and destination
+  //filers can be changed over time, but convolutions are all or nothing.
+  playURLWithOptionalStep = (url, optionalStep) => {
     window.fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {
-        this.play(audioBuffer, filter)
+        this.play(audioBuffer, optionalStep)
 
-      });
-  }
-
-  playURLTelephone = (url) => {
-    window.fetch(url)
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => this.audioCtx.decodeAudioData(arrayBuffer))
-      .then(audioBuffer => {
-        const filter = this.audioCtx.createBiquadFilter();
-        // Note: the Web Audio spec is moving from constants to strings.
-        // filter.type = 'lowpass';
-        filter.type = filter.LOWPASS;
-        filter.frequency.value = 100;
-
-        this.play(audioBuffer, filter)
-
-        return filter;
       });
   }
 
@@ -125,14 +129,14 @@ class AudioFucker {
 
 
 
-  play(audioBuffer, optionalFilter) {
+  play(audioBuffer, optionalStep) {
     const source = this.audioCtx.createBufferSource();
     source.loop = true;
     source.buffer = audioBuffer;
-    if (optionalFilter) {
+    if (optionalStep) {
       //filter is in between source and destination
-      source.connect(optionalFilter);
-      optionalFilter.connect(this.audioCtx.destination);
+      source.connect(optionalStep);
+      optionalStep.connect(this.audioCtx.destination);
     } else {
       //direct connection
       source.connect(this.audioCtx.destination);

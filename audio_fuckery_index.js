@@ -36,13 +36,27 @@ window.onload = () => {
   muffle.onclick = async () => {
     console.log("JR NOTE: click")
     const filter = audioFucker.muffleFilter();
-    await audioFucker.playURLWithFilter(url,filter);
+    await audioFucker.playURLWithOptionalStep(url,filter);
     //JR NOTE: the below works, so we can fuck with how muffled it is
     setInterval(() => {
       console.log("JR NOTE: filter.frequency.value  ", filter.frequency.value)
       filter.frequency.value += 100;
 
     }, 6000)
+  }
+
+  const distortion = createElementWithClassAndParent("button", container);
+  distortion.innerText = "Play Distorted Audio";
+  distortion.onclick = async () => {
+    console.log("JR NOTE: click")
+    let amount = 400;
+    let d = audioFucker.distortion(amount);
+    await audioFucker.playURLWithOptionalStep(url,d);
+    //JR NOTE: the below works, so we can fuck with how muffled it is
+    setInterval(() => {
+      console.log("JR NOTE: distortion: ", amount)
+      d.curve = audioFucker.makeDistortionCurve(amount+=1000)
+    }, 1000)
   }
 
 
